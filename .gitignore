@@ -42,3 +42,5 @@ next-env.d.ts
 
 # o exemplo precisa ser versionado — e o unico .env que pode
 !.env.example
+
+.vercel
