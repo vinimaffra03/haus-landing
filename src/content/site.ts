@@ -112,11 +112,11 @@ export const people = [
   `summary` está descrito a partir do próprio site. Antes de publicar, revisem
   — vocês sabem o contexto que a meta description não conta.
 
-  Assets de vídeo (opcional, o card já funciona sem eles):
-  - public/trabalhos/<slug>.mp4   H.264, mudo, 6-10s, ~1-2 MB
-  - public/trabalhos/<slug>.webp  primeiro quadro, ~40-80 KB
-  Grave rolando a página devagar, sem cursor. Sem os arquivos o card mostra
-  o link "ver no ar", que já é prova suficiente.
+  Previews geradas por `node scripts/previews.mjs` — versionadas em
+  public/trabalhos/<slug>.webp (900x563). Sem dependencia externa em runtime.
+
+  Para atualizar depois de mexer num projeto: node scripts/previews.mjs <slug>
+
 */
 export const trabalhos = [
   {

@@ -1,7 +1,16 @@
+import Image from "next/image";
 import Reveal from "@/components/fx/Reveal";
-import VideoLoop from "@/components/fx/VideoLoop";
 import { Eyebrow, Section } from "@/components/ui";
 import { trabalhos } from "@/content/site";
+
+/*
+  Preview estático em vez de vídeo: next/image serve AVIF/WebP responsivo e
+  carrega sob demanda. Seis vídeos em autoplay custariam megabytes e o LCP
+  no celular — de onde vem a conversão.
+
+  As imagens são geradas por `node scripts/previews.mjs` e ficam versionadas.
+  Nenhuma dependência de serviço externo em runtime.
+*/
 
 export default function Trabalhos() {
   return (
@@ -24,20 +33,21 @@ export default function Trabalhos() {
                 className="group block"
               >
                 <div className="border-line-2 bg-ink-2 relative aspect-16/10 overflow-hidden border">
-                  <VideoLoop
-                    src={`/trabalhos/${t.slug}.mp4`}
-                    poster={`/trabalhos/${t.slug}.webp`}
-                    label={`Preview do site ${t.title}`}
-                    className="transition-transform duration-700 group-hover:scale-[1.03]"
+                  <Image
+                    src={`/trabalhos/${t.slug}.webp`}
+                    alt={`Página inicial do site ${t.title}`}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
                   />
 
                   {/* Autoria: qual dos dois tocou o projeto. */}
-                  <span className="bg-ink text-dim absolute top-0 right-0 px-2 py-1 font-mono text-[10px] tracking-[0.12em]">
+                  <span className="bg-ink text-dim absolute top-0 right-0 z-10 px-2 py-1 font-mono text-[10px] tracking-[0.12em]">
                     {t.author}
                   </span>
 
                   {/* Aparece no hover — a área toda é clicável. */}
-                  <span className="bg-accent text-ink absolute bottom-0 left-0 px-2.5 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="bg-accent text-ink absolute bottom-0 left-0 z-10 px-2.5 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase opacity-0 transition-opacity group-hover:opacity-100">
                     ver no ar ↗
                   </span>
                 </div>
