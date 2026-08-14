@@ -1,26 +1,112 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  haus. — sistema de design, direção A (condensada).
+  A marca é comprometida com um mundo visual só: preto é a identidade,
+  não um tema. Por isso não existe variante clara nem media query de tema.
+*/
+
+@theme {
+  /* cor */
+  --color-ink: #000000;
+  --color-ink-2: #0a0a0a;
+  --color-accent: #d33d00;
+  --color-paper: #f5f5f5;
+  --color-slate: #303f3c;
+  --color-line: #1e1e1e;
+  --color-line-2: #2c2c2c;
+  --color-dim: #7a7a7a;
+
+  /* tipo */
+  --font-display: var(--font-anton), "Arial Narrow", Haettenschweiler, Impact, sans-serif;
+  --font-mono: var(--font-jetbrains), Consolas, ui-monospace, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* forma — raio é sempre zero neste sistema */
+  --radius-none: 0;
+
+  /* largura */
+  --container-haus: 1080px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-ink);
+  color: var(--color-paper);
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Fundo em grid — 40px, deriva lenta. CSS puro, custo zero. */
+@keyframes haus-drift {
+  to {
+    transform: translate(-40px, -40px);
+  }
+}
+
+.grid-bg {
+  position: absolute;
+  inset: -40px;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: haus-drift 7s linear infinite;
+}
+
+/* Granulado de impressão — dá textura sem imagem. */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.03) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* Revelação na entrada da viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal[data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .grid-bg {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
