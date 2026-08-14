@@ -102,6 +102,79 @@ export const people = [
   },
 ] as const;
 
+/*
+  Seis projetos reais, todos no ar e verificados (HTTP 200 em 14/08/2026).
+  Três de cada sócio, escolhidos por AFINIDADE COM O PÚBLICO — fundador
+  brasileiro não-técnico quer ver negócio parecido com o dele, não proeza
+  técnica. Por isso os projetos de cripto e quant ficaram de fora: são os
+  mais impressionantes tecnicamente e os que menos conversam com esse cliente.
+
+  `summary` está descrito a partir do próprio site. Antes de publicar, revisem
+  — vocês sabem o contexto que a meta description não conta.
+
+  Assets de vídeo (opcional, o card já funciona sem eles):
+  - public/trabalhos/<slug>.mp4   H.264, mudo, 6-10s, ~1-2 MB
+  - public/trabalhos/<slug>.webp  primeiro quadro, ~40-80 KB
+  Grave rolando a página devagar, sem cursor. Sem os arquivos o card mostra
+  o link "ver no ar", que já é prova suficiente.
+*/
+export const trabalhos = [
+  {
+    slug: "rickfretes",
+    title: "RickFretes",
+    kind: "Logística",
+    stack: "Next.js · TypeScript",
+    summary: "Fretes e mudanças em Curitiba, com orçamento automático no site.",
+    url: "https://rickfretes.vercel.app",
+    author: "VM",
+  },
+  {
+    slug: "quattromed",
+    title: "QuattroMed",
+    kind: "Saúde",
+    stack: "Next.js · TypeScript",
+    summary: "Telemedicina com consulta online acessível para todo o Brasil.",
+    url: "https://quattro-med.vercel.app",
+    author: "JP",
+  },
+  {
+    slug: "alphaplanner",
+    title: "AlphaPlanner",
+    kind: "Sistema",
+    stack: "Next.js · TypeScript",
+    summary: "Sistema de planejamento financeiro pessoal, com área logada.",
+    url: "https://alphaplanner.vercel.app",
+    author: "VM",
+  },
+  {
+    slug: "worknow",
+    title: "WorkNow",
+    kind: "Marketplace",
+    stack: "JavaScript · React",
+    summary: "Plataforma de locação de salas comerciais, conectando proprietário e locatário.",
+    url: "https://worknow-delta.vercel.app",
+    author: "JP",
+  },
+  {
+    slug: "smokeside",
+    title: "SmokeSide",
+    kind: "E-commerce",
+    stack: "Next.js · TypeScript",
+    summary: "Loja de streetwear com catálogo e coleção sazonal.",
+    url: "https://smokesideco.vercel.app",
+    author: "VM",
+  },
+  {
+    slug: "houdimedia",
+    title: "Houdi Media",
+    kind: "Agência",
+    stack: "JavaScript · React",
+    summary: "Site da agência de tráfego pago, social media e branding.",
+    url: "https://houdimedia.vercel.app",
+    author: "JP",
+  },
+] as const;
+
 export const faq = [
   {
     q: "E se vocês não acharem nada?",

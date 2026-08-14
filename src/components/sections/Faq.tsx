@@ -3,10 +3,10 @@ import { faq } from "@/content/site";
 
 export default function Faq() {
   return (
-    <Section>
-      <Eyebrow>perguntas</Eyebrow>
+    <Section invert>
+      <Eyebrow className="opacity-45">perguntas</Eyebrow>
 
-      <div className="divide-line border-line mt-8 divide-y border-y">
+      <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
         {faq.map((f) => (
           <details key={f.q} className="group py-5">
             <summary className="flex cursor-pointer list-none items-baseline justify-between gap-6 font-display text-lg tracking-[0.02em] uppercase [&::-webkit-details-marker]:hidden">
