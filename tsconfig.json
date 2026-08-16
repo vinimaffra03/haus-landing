@@ -9,6 +9,10 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    // Permite importar com extensão .ts explícita. Necessário para que o
+    // mesmo código resolva tanto no bundler do Next quanto no runtime
+    // nativo de TypeScript do Node — que exige extensão em ESM.
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
