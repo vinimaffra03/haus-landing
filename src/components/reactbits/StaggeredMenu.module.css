@@ -1,0 +1,77 @@
+/*
+  StaggeredMenu do ReactBits, adaptado ao sistema da haus.
+
+  O original vem com painel branco, raio arredondado e acento roxo. Aqui:
+  painel preto, raio zero, acento #D33D00, display condensada.
+*/
+
+.wrapper { position: relative; z-index: 60; }
+
+.toggle {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: transparent; border: 0; cursor: pointer;
+  color: var(--color-paper); font-family: var(--font-mono);
+  font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+  padding: 6px 0; line-height: 1;
+}
+.toggle:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+
+.textWrap { position: relative; display: inline-block; height: 1em; overflow: hidden; white-space: nowrap; }
+.textInner { display: flex; flex-direction: column; line-height: 1; }
+.line { display: block; height: 1em; line-height: 1; }
+
+.icon { position: relative; width: 13px; height: 13px; flex: none; display: inline-flex; }
+.iconLine {
+  position: absolute; left: 50%; top: 50%; width: 100%; height: 1.5px;
+  background: currentColor; transform: translate(-50%,-50%);
+}
+
+.prelayers {
+  position: fixed; inset: 0 0 0 auto; width: min(100%, 460px);
+  pointer-events: none; z-index: 50;
+}
+.prelayer { position: absolute; inset: 0; width: 100%; }
+
+.panel {
+  position: fixed; inset: 0 0 0 auto; width: min(100%, 460px);
+  background: var(--color-ink); border-left: 1px solid var(--color-line-2);
+  display: flex; flex-direction: column; padding: 96px 32px 32px;
+  overflow-y: auto; z-index: 55;
+}
+
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; counter-reset: item; }
+.itemWrap { position: relative; overflow: hidden; line-height: 1; }
+
+.item {
+  position: relative; display: inline-block; text-decoration: none;
+  font-family: var(--font-display); font-size: clamp(34px, 9vw, 54px);
+  text-transform: uppercase; color: var(--color-paper);
+  line-height: 1; padding-right: 1.6em; transition: color .25s;
+}
+.item:hover, .item:focus-visible { color: var(--color-accent); }
+
+.item::after {
+  counter-increment: item;
+  content: counter(item, decimal-leading-zero);
+  position: absolute; top: .15em; right: 0;
+  font-family: var(--font-mono); font-size: 13px;
+  color: var(--color-accent); opacity: var(--num-opacity, 0);
+}
+
+.itemLabel { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
+
+.rodape { margin-top: auto; padding-top: 40px; }
+.rodapeTitulo {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--color-accent); margin: 0 0 12px; font-weight: 400;
+}
+.rodapeLista { list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; flex-wrap: wrap; }
+.rodapeLink {
+  font-family: var(--font-mono); font-size: 12px; color: var(--color-dim);
+  text-decoration: none; transition: color .25s;
+}
+.rodapeLink:hover, .rodapeLink:focus-visible { color: var(--color-paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  .panel, .prelayer, .itemLabel { transition: none !important; }
+}

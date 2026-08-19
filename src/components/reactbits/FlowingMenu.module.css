@@ -1,0 +1,58 @@
+/*
+  FlowingMenu do ReactBits, adaptado.
+  Original: fundo #120F17, marquee branco, raio 50px na imagem.
+  Aqui: preto, marquee no acento, raio zero.
+*/
+
+.wrap { width: 100%; overflow: hidden; background: var(--color-ink); }
+.menu { display: flex; flex-direction: column; margin: 0; padding: 0; }
+
+.item {
+  position: relative; overflow: hidden; text-align: center;
+  border-top: 1px solid var(--color-line);
+}
+.item:first-child { border-top: 0; }
+
+.link {
+  display: flex; align-items: center; justify-content: center;
+  position: relative; cursor: pointer; text-decoration: none;
+  white-space: nowrap; text-transform: uppercase;
+  font-family: var(--font-display); font-size: clamp(28px, 6vw, 54px);
+  color: var(--color-paper); padding: 26px 16px; line-height: 1;
+}
+
+.marquee {
+  position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  background: var(--color-accent); transform: translate3d(0, 101%, 0);
+}
+.marqueeWrap { height: 100%; width: 100%; overflow: hidden; }
+.marqueeInner { display: flex; align-items: center; position: relative; height: 100%; width: fit-content; will-change: transform; }
+.part { display: flex; align-items: center; flex-shrink: 0; }
+
+.part span {
+  white-space: nowrap; text-transform: uppercase;
+  font-family: var(--font-display); font-size: clamp(28px, 6vw, 54px);
+  color: var(--color-ink); line-height: 1; padding: 0 18px;
+}
+
+.partImg {
+  width: 150px; height: 62px; margin: 0 18px;
+  background-size: cover; background-position: top center;
+  border: 1px solid var(--color-ink);
+}
+
+/* Sem movimento: o marquee nunca entra, fica só o link legível. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee { display: none; }
+}
+
+/* Linha secundária ao lado do título, some quando o marquee cobre. */
+.note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  margin-left: 14px;
+  align-self: center;
+}

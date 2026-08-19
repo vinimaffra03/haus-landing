@@ -5,6 +5,7 @@ import Hero from "@/components/sections/Hero";
 import Orcamento from "@/components/sections/Orcamento";
 import Precos from "@/components/sections/Precos";
 import Problema from "@/components/sections/Problema";
+import Servicos from "@/components/sections/Servicos";
 import QuemFaz from "@/components/sections/QuemFaz";
 import Trabalhos from "@/components/sections/Trabalhos";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
@@ -30,6 +31,7 @@ export default function Home() {
       <Achados />
       <ComoFunciona />
       <Precos />
+      <Servicos />
       <QuemFaz />
       <Trabalhos />
       <Faq />

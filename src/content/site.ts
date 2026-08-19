@@ -134,7 +134,12 @@ export const people = [
   — vocês sabem o contexto que a meta description não conta.
 
   Previews geradas por `node scripts/previews.mjs` — versionadas em
-  public/trabalhos/<slug>.webp (900x563). Sem dependencia externa em runtime.
+  public/trabalhos/<slug>.webp, 900px de largura e ALTURA VARIÁVEL.
+
+  A altura sai de 15% do comprimento real da página de cada projeto, então
+  site longo vira card alto e site curto vira card baixo. Isso não é estética:
+  masonry com imagens de proporção idêntica é só um grid com JS a mais.
+  Variação atual: 633px a 1400px (2,2x).
 
   Para atualizar depois de mexer num projeto: node scripts/previews.mjs <slug>
 
@@ -142,6 +147,8 @@ export const people = [
 export const trabalhos = [
   {
     slug: "rickfretes",
+    /** Altura real da preview — o masonry usa para calcular a coluna. */
+    height: 904,
     title: "RickFretes",
     kind: "Logística",
     stack: "Next.js · TypeScript",
@@ -151,6 +158,8 @@ export const trabalhos = [
   },
   {
     slug: "quattromed",
+    /** Altura real da preview — o masonry usa para calcular a coluna. */
+    height: 1212,
     title: "QuattroMed",
     kind: "Saúde",
     stack: "Next.js · TypeScript",
@@ -160,6 +169,8 @@ export const trabalhos = [
   },
   {
     slug: "alphaplanner",
+    /** Altura real da preview — o masonry usa para calcular a coluna. */
+    height: 1075,
     title: "AlphaPlanner",
     kind: "Sistema",
     stack: "Next.js · TypeScript",
@@ -169,6 +180,8 @@ export const trabalhos = [
   },
   {
     slug: "worknow",
+    /** Altura real da preview — o masonry usa para calcular a coluna. */
+    height: 1296,
     title: "WorkNow",
     kind: "Marketplace",
     stack: "JavaScript · React",
@@ -178,6 +191,8 @@ export const trabalhos = [
   },
   {
     slug: "smokeside",
+    /** Altura real da preview — o masonry usa para calcular a coluna. */
+    height: 633,
     title: "SmokeSide",
     kind: "E-commerce",
     stack: "Next.js · TypeScript",
@@ -187,6 +202,8 @@ export const trabalhos = [
   },
   {
     slug: "houdimedia",
+    /** Altura real da preview — o masonry usa para calcular a coluna. */
+    height: 1400,
     title: "Houdi Media",
     kind: "Agência",
     stack: "JavaScript · React",

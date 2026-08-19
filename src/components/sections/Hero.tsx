@@ -1,4 +1,5 @@
 import LetterGlitch from "@/components/fx/LetterGlitch";
+import StaggeredMenu from "@/components/reactbits/StaggeredMenu";
 import ScrambleText from "@/components/fx/ScrambleText";
 import { ButtonPrimary } from "@/components/ui";
 import { hero, site, whatsappHref } from "@/content/site";
@@ -14,9 +15,20 @@ export default function Hero() {
           <span className="font-display text-xl tracking-[0.08em] uppercase">
             {site.brand}
           </span>
-          <span className="font-mono text-[10px] tracking-[0.16em] text-accent uppercase">
-            {site.tagline}
-          </span>
+          {/* Menu só aqui, na home. A /scan não tem — landing paga precisa
+              de zero saídas além da CTA. */}
+          <StaggeredMenu
+            items={[
+              { label: "Problema", href: "#trabalhos" },
+              { label: "Preços", href: "#precos" },
+              { label: "Trabalhos", href: "#trabalhos" },
+              { label: "Verificar", href: "/scan" },
+            ]}
+            links={[
+              { label: "WhatsApp", href: whatsappHref() },
+              { label: site.email, href: `mailto:${site.email}` },
+            ]}
+          />
         </nav>
 
         <div className="mt-auto pt-20">
