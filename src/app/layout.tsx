@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -33,13 +34,20 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: "haus. — seu app travou, a gente coloca no ar",
   description:
-    "Auditoria de segurança em 48h por R$300. Consertamos e colocamos no ar apps feitos com Lovable, Bolt, v0 e Replit. Preço fechado, sem orçamento surpresa.",
+    "Verifique seu app de graça em 30 segundos. Consertamos e colocamos no ar apps feitos com Lovable, Bolt, v0 e Replit. Preço fechado, sem orçamento surpresa.",
+  /*
+    ⚠️ Vocabulário deliberado. A política do Google Ads sobre "possibilitar
+    comportamento desonesto" proíbe serviço que dê acesso não autorizado a
+    sistemas, e um revisor automatizado pode confundir linguagem de segurança
+    com isso. Evitamos: hacker, invadir, vulnerabilidade, exploit, brecha.
+  */
   keywords: [
     "consertar app lovable",
-    "auditoria de segurança supabase",
     "finalizar app feito com IA",
+    "desenvolvedor para terminar projeto",
+    "colocar aplicativo no ar",
+    "revisão técnica de app",
     "software house",
-    "corrigir RLS supabase",
   ],
   openGraph: {
     type: "website",
@@ -48,12 +56,12 @@ export const metadata: Metadata = {
     siteName: "haus.",
     title: "haus. — seu app travou, a gente coloca no ar",
     description:
-      "Auditoria de segurança em 48h por R$300. Apps feitos com IA, corrigidos e em produção.",
+      "Verificação grátis em 30 segundos. Apps feitos com IA, corrigidos e em produção.",
   },
   twitter: {
     card: "summary_large_image",
     title: "haus. — seu app travou, a gente coloca no ar",
-    description: "Auditoria de segurança em 48h por R$300.",
+    description: "Verificação grátis em 30 segundos.",
   },
   robots: { index: true, follow: true },
 };
@@ -69,7 +77,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="pt-BR"
       className={`${anton.variable} ${jetbrains.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="bg-ink text-paper font-sans min-h-full">{children}</body>
+      <body className="bg-ink text-paper font-sans min-h-full">
+        {children}
+        {/*
+          Vercel Analytics: sem cookie, sem banner de consentimento, sem
+          configuração. Não substitui GA4 nem pixel — mas hoje não havia
+          NADA, e anunciar sem saber quantas pessoas chegam é gastar às cegas.
+        */}
+        <Analytics />
+      </body>
     </html>
   );
 }

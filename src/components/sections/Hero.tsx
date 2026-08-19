@@ -36,7 +36,7 @@ export default function Hero() {
           </p>
 
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <ButtonPrimary href="#orcamento">Pedir orçamento</ButtonPrimary>
+            <ButtonPrimary href="/scan">Verificar meu app grátis</ButtonPrimary>
             <a
               href={whatsappHref()}
               target="_blank"

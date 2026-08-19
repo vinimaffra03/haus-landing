@@ -9,16 +9,16 @@ export const site = {
   city: "São Paulo",
   whatsapp: {
     // Formato internacional sem símbolos: 55 + DDD + número
-    number: "5511999999999",
+    number: "5511987837177",
     message: "Oi! Vi o site da haus. e queria falar sobre meu app.",
   },
-  email: "contato@haus.dev.br",
+  email: "thehausdot@gmail.com",
 } as const;
 
 export const hero = {
   line1: "SEU APP TRAVOU.",
   line2: "A GENTE COLOCA NO AR.",
-  meta: "AUDITORIA EM 48H · R$300 · PREÇO FECHADO",
+  meta: "SCAN GRÁTIS EM 30 SEGUNDOS · SEM CADASTRO",
 } as const;
 
 export const stats = [
@@ -60,13 +60,13 @@ export const findings = [
 export const steps = [
   {
     n: "01",
-    title: "Você manda o link",
-    body: "Repositório ou app no ar. Não precisa saber explicar o que está errado — esse é o nosso trabalho.",
+    title: "Cole o endereço do seu app",
+    body: "Só o link, sem cadastro e sem cartão. Em 30 segundos você vê o que está exposto.",
   },
   {
     n: "02",
-    title: "Relatório em 48h",
-    body: "Cada achado com severidade, onde exatamente está, e como corrigir. Completo o bastante para você resolver sozinho se quiser.",
+    title: "Veja o que achamos",
+    body: "Cada problema com gravidade e explicação em português. O relatório é seu, mesmo que você não contrate nada.",
   },
   {
     n: "03",
@@ -75,14 +75,35 @@ export const steps = [
   },
 ] as const;
 
+/*
+  Tabela revisada em 19/08/2026, com base em preço real de marketplace.
+
+  O que a pesquisa mostrou e derrubou a tabela anterior:
+  - Landing page: mediana do Fiverr R$438-547, Workana R$261-522.
+    Os R$1.400 anteriores eram ~3x a mediana de mercado.
+  - Correção pontual: Workana R$261-522; gigs "rescue Lovable" no Fiverr
+    começam em R$157. O nicho JÁ tem preço global formado.
+  - "Colocar no ar" a R$2.200 era 33% do faturamento bruto mensal de um MEI
+    (teto R$81k/ano). Era o item mais exposto da tabela.
+  - CRM a R$6.500 compete com SaaS pronto a R$100/usuário/mês.
+
+  ⚠️ Preço menor SEM escopo menor é doar mão de obra. Os prazos abaixo foram
+  encurtados junto com os valores — cada item é deliberadamente mais estreito
+  do que era.
+
+  ⚠️ O scan automatizado não é mais produto pago: existe concorrente com
+  camada gratuita e R$99/mês. Ele virou isca. O que se cobra é julgamento
+  humano — o que corrigir primeiro e o que o scanner não enxerga.
+*/
 export const prices = [
-  { service: "Auditoria de segurança", term: "48h", price: "R$300", lead: true },
-  { service: "Correção pontual", term: "3-5 dias", price: "R$600" },
-  { service: "Colocar no ar — produção", term: "2 semanas", price: "R$2.200", from: true },
-  { service: "Landing page", term: "1 semana", price: "R$1.400" },
-  { service: "Landing avançada", term: "3 semanas", price: "R$3.400", from: true },
-  { service: "Sistema / CRM sob medida", term: "orçado", price: "R$6.500", from: true },
-  { service: "Monitoramento mensal", term: "contínuo", price: "R$400", suffix: "/mês" },
+  { service: "Scan de superfície", term: "30 segundos", price: "grátis", lead: true },
+  { service: "Diagnóstico com prioridade", term: "24h", price: "R$150" },
+  { service: "Correção pontual", term: "2 dias", price: "R$350" },
+  { service: "Landing page", term: "4 dias", price: "R$650" },
+  { service: "Colocar no ar — produção", term: "1 semana", price: "R$1.200", from: true },
+  { service: "Landing avançada", term: "2 semanas", price: "R$1.800", from: true },
+  { service: "Sistema sob medida", term: "orçado", price: "R$3.500", from: true },
+  { service: "Monitoramento mensal", term: "contínuo", price: "R$200", suffix: "/mês" },
 ] as const;
 
 export const people = [
@@ -177,20 +198,28 @@ export const trabalhos = [
 
 export const faq = [
   {
-    q: "E se vocês não acharem nada?",
-    a: "Você recebe o relatório dizendo isso, com o que foi verificado item a item. Em 200 repositórios auditados, 9 em cada 10 tinham pelo menos uma falha — mas se o seu for a exceção, a gente diz.",
+    q: "O scan é grátis mesmo? Qual a pegadinha?",
+    a: "É grátis e não pede cadastro. Ele olha o que qualquer visitante do seu site já consegue ver — por isso sai em segundos e não nos custa nada. O que cobramos é o passo seguinte: dizer o que corrigir primeiro e corrigir.",
   },
   {
-    q: "A auditoria abate no valor da correção?",
-    a: "Não. Ela é avulsa e vale sozinha: o relatório é detalhado o suficiente para você corrigir por conta própria se preferir.",
+    q: "E se o scan não achar nada?",
+    a: "Ótimo, e você não paga nada. Mas fique atento: o scan enxerga só o lado de fora. Cinco dos nove problemas que procuramos só aparecem com acesso ao código — é isso que o diagnóstico de R$150 cobre.",
   },
   {
-    q: "Vocês precisam de acesso ao meu banco?",
-    a: "Para a auditoria, não. Basta o repositório ou a URL do app. Acesso a produção só entra se você contratar a correção, e com credencial temporária que você revoga depois.",
+    q: "Vocês precisam de acesso ao meu banco de dados?",
+    a: "Para o scan, não — basta o endereço do site. Para o diagnóstico completo, o código. Acesso a produção só entra se você contratar a correção, e com credencial temporária que você revoga depois.",
   },
   {
-    q: "Meu app foi feito no Lovable / Bolt / v0. Vocês julgam?",
+    q: "Vocês olham dentro dos meus dados?",
+    a: "Não, e isso é decisão técnica nossa. Quando encontramos uma tabela aberta, provamos com a contagem de registros — nunca lendo o conteúdo. O scan é feito de forma que nenhuma linha do seu banco chega até nós.",
+  },
+  {
+    q: "Meu app foi feito no Lovable, Bolt ou v0. Vocês julgam?",
     a: "Não. Ferramenta de IA constrói rápido e deixa buraco — isso é característica da ferramenta, não falha sua. Nosso trabalho começa exatamente aí.",
+  },
+  {
+    q: "Como funciona o pagamento?",
+    a: "Pix, com metade na aprovação do escopo e metade na entrega. Escopo e prazo são fechados por escrito antes de começar — se algo sair do combinado, orçamos à parte e você aprova antes.",
   },
 ] as const;
 
