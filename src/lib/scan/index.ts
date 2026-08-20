@@ -1,4 +1,5 @@
 import { checkDeps } from "./checks/deps.ts";
+import { checkExposure } from "./checks/exposure.ts";
 import { checkHeaders } from "./checks/headers.ts";
 import { checkSecrets } from "./checks/secrets.ts";
 import { checkSupabase } from "./checks/supabase.ts";
@@ -60,6 +61,17 @@ export async function scan(rawUrl: string): Promise<ScanResult> {
 
   findings.push(...checkDeps(ctx));
   checked.push("bibliotecas com falha conhecida");
+
+  /*
+    Arquivos internos servidos publicamente. Roda depois do download dos
+    bundles porque precisa deles para achar as referências de source map.
+
+    É o check com maior chance de trazer CRÍTICO num app gerado por IA: .env
+    esquecido na pasta publicada e source map ligado são o padrão de quem
+    publicou às pressas.
+  */
+  findings.push(...(await checkExposure(ctx)));
+  checked.push("arquivos internos expostos e source maps");
 
   if (ctx.supabase) {
     findings.push(...(await checkSupabase(ctx)));

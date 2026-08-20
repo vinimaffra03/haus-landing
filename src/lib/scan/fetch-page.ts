@@ -10,7 +10,7 @@ const TIMEOUT_MS = 12_000;
 const MAX_BUNDLE_BYTES = 4 * 1024 * 1024;
 const MAX_BUNDLES = 25;
 
-const UA = "haus-scanner/1.0 (+https://thehausdot.vercel.app)";
+export const UA = "haus-scanner/1.0 (+https://thehausdot.vercel.app)";
 
 export function normalizeUrl(input: string): string {
   const trimmed = input.trim();

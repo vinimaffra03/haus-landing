@@ -6,12 +6,17 @@ import { Eyebrow, Section } from "@/components/ui";
   revela um marquee com a preview de um projeto daquele tipo.
 
   As imagens reaproveitam as previews que já existem — nenhum asset novo.
+
+  ⚠️ `note` tem que bater com `prices` em site.ts, incluindo o "a partir de".
+  Até 20/08/2026 esta faixa dizia "a partir de R$350" enquanto a tabela dizia
+  R$350 fixo — dois preços para o mesmo item na mesma página é o tipo de
+  detalhe que faz o visitante desconfiar do resto.
 */
 
 const SERVICOS: FlowingItem[] = [
   {
     text: "Consertar",
-    note: "a partir de R$350",
+    note: "R$350",
     link: "#precos",
     image: "/trabalhos/rickfretes.webp",
   },
@@ -23,7 +28,7 @@ const SERVICOS: FlowingItem[] = [
   },
   {
     text: "Landing page",
-    note: "a partir de R$650",
+    note: "R$650",
     link: "#precos",
     image: "/trabalhos/houdimedia.webp",
   },

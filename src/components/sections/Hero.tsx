@@ -19,7 +19,7 @@ export default function Hero() {
               de zero saídas além da CTA. */}
           <StaggeredMenu
             items={[
-              { label: "Problema", href: "#trabalhos" },
+              { label: "Problema", href: "#problema" },
               { label: "Preços", href: "#precos" },
               { label: "Trabalhos", href: "#trabalhos" },
               { label: "Verificar", href: "/scan" },

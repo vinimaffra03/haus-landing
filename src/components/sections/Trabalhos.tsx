@@ -29,8 +29,9 @@ export default function Trabalhos() {
       <Eyebrow>o que a gente já construiu</Eyebrow>
 
       <p className="mt-4 max-w-[54ch] text-[15px] leading-relaxed opacity-60">
-        Seis projetos no ar. Cada preview é o site rodando de verdade — clique
-        para abrir e conferir.
+        Seis projetos nossos, no ar agora. São trabalhos que a gente construiu —
+        não são clientes, e a gente prefere dizer isso a deixar você supor.
+        Cada preview é o site rodando de verdade: clique e confira.
       </p>
 
       <div className="mt-10">

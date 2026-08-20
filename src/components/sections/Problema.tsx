@@ -5,7 +5,7 @@ import { stats, statsSource } from "@/content/site";
 
 export default function Problema() {
   return (
-    <Section invert>
+    <Section id="problema" invert>
       <Eyebrow className="opacity-45">o problema</Eyebrow>
 
       <Display className="mt-4 max-w-[16ch] text-[clamp(2rem,6vw,3.4rem)]">

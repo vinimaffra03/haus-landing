@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 import type { ScanResult } from "@/lib/scan/types.ts";
-import { garantia, scanChecks, whatsappScanHref } from "@/content/site";
+import { garantia, origemDaCampanha, scanChecks, whatsappScanHref } from "@/content/site";
 
 type Estado = "parado" | "rodando" | "pronto" | "erro";
 
@@ -22,6 +22,15 @@ export default function ScanForm() {
   const [resultado, setResultado] = useState<ScanResult | null>(null);
   const [erro, setErro] = useState("");
   const [segundos, setSegundos] = useState(0);
+  /*
+    Origem da campanha (UTM). Lida no submit, não em efeito nem na renderização.
+
+    Na renderização daria divergência de hidratação — a /scan é estática e o
+    servidor não tem query string. Em efeito, o lint do React Compiler barra o
+    setState. E não precisa ser antes: o botão de WhatsApp só existe depois do
+    resultado, então ler no submit sempre chega a tempo.
+  */
+  const [origem, setOrigem] = useState("");
 
   /*
     O H1 promete 30s e a rota tem maxDuration de 60. Sem isto, o visitante
@@ -39,10 +48,14 @@ export default function ScanForm() {
     const url = new FormData(e.currentTarget).get("url")?.toString().trim() ?? "";
     if (!url) return;
 
+    const org = origemDaCampanha(window.location.search);
+
     setSegundos(0);
     setEstado("rodando");
     setErro("");
-    track("scan_iniciado");
+    setOrigem(org);
+    // Usa `org`, não `origem`: o estado só vale a partir da próxima renderização.
+    track("scan_iniciado", org ? { origem: org } : undefined);
 
     try {
       const res = await fetch("/api/scan", {
@@ -189,10 +202,15 @@ export default function ScanForm() {
               🚨 Só `title` e `severity` — nunca `evidence`. Ver whatsappScanHref.
             */}
             <a
-              href={whatsappScanHref(resultado.url, resultado.findings)}
+              href={whatsappScanHref(resultado.url, resultado.findings, origem)}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => track("whatsapp_pos_scan", { achados: resultado.findings.length })}
+              onClick={() =>
+                track("whatsapp_pos_scan", {
+                  achados: resultado.findings.length,
+                  ...(origem ? { origem } : {}),
+                })
+              }
               className="bg-ink text-accent font-display mt-5 inline-block px-7 py-3.5 text-[15px] tracking-[0.14em] uppercase"
             >
               Falar no WhatsApp

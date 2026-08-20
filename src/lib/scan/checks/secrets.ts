@@ -28,6 +28,25 @@ const PATTERNS: { re: RegExp; label: string }[] = [
   { re: /\bsk-ant-[A-Za-z0-9_-]{20,}/g, label: "chave da Anthropic" },
   { re: /\bghp_[A-Za-z0-9]{36}\b/g, label: "token do GitHub" },
   { re: /postgres(?:ql)?:\/\/[^\s"'`]{10,}/g, label: "string de conexão do Postgres" },
+  /*
+    Ampliação de 20/08/2026. Mesmo critério dos de cima: prefixo fixo, zero
+    ambiguidade. Nada de entropia genérica — em bundle minificado isso gera
+    falso positivo em hash de build e base64 de asset.
+
+    ⚠️ NÃO entram aqui, por serem públicas por design (mesma razão da anon key
+    do Supabase): a apiKey do Firebase (`AIza…`), o token público do Mapbox
+    (`pk.`) e a publishable key do Stripe (`pk_live_`). Todas as três são
+    feitas para ficar no navegador. Reportá-las é o erro que queima a
+    credibilidade no primeiro cliente que entende do assunto.
+  */
+  { re: /\bre_[A-Za-z0-9]{8,}_[A-Za-z0-9]{16,}/g, label: "chave do Resend" },
+  { re: /\bshpat_[a-fA-F0-9]{32}\b/g, label: "token de acesso da Shopify" },
+  { re: /\bxox[baprs]-[A-Za-z0-9-]{10,}/g, label: "token do Slack" },
+  { re: /\bglpat-[A-Za-z0-9_-]{20,}/g, label: "token do GitLab" },
+  { re: /\bAC[a-f0-9]{32}\b/g, label: "Account SID da Twilio" },
+  { re: /\bGOCSPX-[A-Za-z0-9_-]{20,}/g, label: "client secret do Google OAuth" },
+  { re: /-----BEGIN (?:RSA |EC |OPENSSH |PGP )?PRIVATE KEY-----/g, label: "chave privada" },
+  { re: /\bmongodb(?:\+srv)?:\/\/[^\s"'`]{10,}/g, label: "string de conexão do MongoDB" },
 ];
 
 /** Mostra o suficiente para o cliente localizar a chave, sem republicá-la. */

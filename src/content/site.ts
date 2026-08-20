@@ -168,6 +168,17 @@ export const people = [
   Sem valor escrito aqui de propósito: a /scan foi mantida sem nenhum "R$" por
   decisão deles, e este texto é usado nas duas páginas.
 */
+/*
+  Nota da tabela de preços.
+
+  Sem ela, o R$9,98 aparece entre "grátis" e "R$350" sem explicação nenhuma e
+  lê como erro de digitação ou pegadinha — dois preços quase-zero seguidos e
+  depois um salto de 35x. A nota transforma o número em decisão declarada, que
+  é o que ele é.
+*/
+export const precosNota =
+  "O diagnóstico custa R$9,98 de propósito: é para você experimentar antes de confiar, não para a gente ganhar dinheiro com ele. Ganhamos no que vem depois — se você quiser que a gente faça.";
+
 export const garantia = {
   titulo: "Se a gente não achar nada, você não paga",
   corpo:
@@ -318,11 +329,22 @@ const MAX_NA_MENSAGEM = 6;
 export function whatsappScanHref(
   url: string,
   achados: readonly { title: string; severity: string }[],
+  /*
+    Etiqueta curta de origem, vinda da UTM do anúncio (ex.: "tiktok/video-03").
+
+    Com tráfego de Instagram e TikTok não existe palavra-chave para dizer de
+    onde veio a conversa — sem isto, toda mensagem chega indistinguível e os
+    sócios impulsionam no escuro. Vai visível e no fim: o visitante lê a
+    mensagem antes de enviar, e esconder coisa nela seria trapaça.
+  */
+  origem = "",
 ) {
+  const marca = origem ? `\n\n[${origem}]` : "";
+
   if (achados.length === 0) {
     return whatsappHref(
       `Oi! Rodei a verificação em ${url} e não apareceu nada por fora. ` +
-        `Queria entender o que só dá pra ver com acesso ao código.`,
+        `Queria entender o que só dá pra ver com acesso ao código.${marca}`,
     );
   }
 
@@ -339,6 +361,27 @@ export function whatsappScanHref(
   return whatsappHref(
     `Oi! Rodei a verificação em ${url} e deu ${achados.length} ponto(s)` +
       (criticos > 0 ? `, sendo ${criticos} crítico(s)` : "") +
-      `:\n\n${lista}${resto}\n\nQueria saber o que corrigir primeiro.`,
+      `:\n\n${lista}${resto}\n\nQueria saber o que corrigir primeiro.${marca}`,
   );
+}
+
+/*
+  Lê a origem da campanha da própria URL. Só faz sentido no cliente.
+
+  `utm_source` é a plataforma, `utm_content` identifica o criativo (qual vídeo).
+  Os dois viram uma etiqueta curta como "tiktok/video-03".
+
+  🚨 Sanitizado porque query string é entrada de terceiro. Sem limite de
+  alfabeto e de tamanho, qualquer pessoa monta um link para a /scan com texto
+  arbitrário embutido — e esse texto acabaria dentro de uma mensagem de
+  WhatsApp que o visitante acha que foi a haus. quem escreveu.
+*/
+export function origemDaCampanha(search: string): string {
+  const p = new URLSearchParams(search);
+  const limpa = (v: string | null) => (v ?? "").replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 24);
+
+  const fonte = limpa(p.get("utm_source"));
+  const criativo = limpa(p.get("utm_content"));
+
+  return [fonte, criativo].filter(Boolean).join("/");
 }

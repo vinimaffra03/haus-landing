@@ -1,6 +1,6 @@
 import Reveal from "@/components/fx/Reveal";
 import { Eyebrow, Section } from "@/components/ui";
-import { prices } from "@/content/site";
+import { garantia, precosNota, prices } from "@/content/site";
 
 export default function Precos() {
   return (
@@ -39,6 +39,15 @@ export default function Precos() {
           </Reveal>
         ))}
       </ul>
+
+      <div className="border-line mt-8 border-t pt-6">
+        <p className="max-w-[58ch] text-[13.5px] leading-relaxed opacity-55">
+          {precosNota}
+        </p>
+        <p className="text-accent mt-4 max-w-[58ch] font-mono text-[12.5px] leading-relaxed">
+          {garantia.titulo}.
+        </p>
+      </div>
     </Section>
   );
 }

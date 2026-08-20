@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { whatsappScanHref } from "../src/content/site.ts";
+import { origemDaCampanha, whatsappScanHref } from "../src/content/site.ts";
 import type { Finding } from "../src/lib/scan/types.ts";
 
 /*
@@ -87,6 +87,56 @@ test("scan sem achado ainda gera mensagem útil", () => {
   assert.ok(texto.includes("não apareceu nada por fora"));
   // Mesmo sem achado a conversa precisa ter um próximo passo, ou a CTA morre.
   assert.ok(texto.includes("acesso ao código"));
+});
+
+/* ------------------------- origem da campanha -------------------------- */
+
+/*
+  A UTM vem da barra de endereço, ou seja, de quem montou o link — não da haus.
+  Sem sanitização, qualquer pessoa distribui um link para a /scan com texto
+  arbitrário embutido, e esse texto aparece dentro de uma mensagem de WhatsApp
+  que o visitante lê como se a haus. tivesse escrito.
+*/
+
+test("monta a etiqueta a partir de source e content", () => {
+  assert.equal(origemDaCampanha("?utm_source=tiktok&utm_content=video-03"), "tiktok/video-03");
+  assert.equal(origemDaCampanha("?utm_source=instagram"), "instagram");
+  assert.equal(origemDaCampanha(""), "");
+  assert.equal(origemDaCampanha("?outra=coisa"), "");
+});
+
+test("remove qualquer caractere fora do alfabeto permitido", () => {
+  const sujo = "?utm_source=" + encodeURIComponent("tik tok!@#$%^&*()[]{}<>/\\\"'`\n");
+  const limpo = origemDaCampanha(sujo);
+
+  assert.equal(limpo, "tiktok");
+  assert.ok(!/[^a-zA-Z0-9._/-]/.test(limpo), "sobrou caractere não permitido");
+});
+
+test("limita o tamanho para não inflar a mensagem", () => {
+  const gigante = "?utm_content=" + "a".repeat(500);
+  assert.equal(origemDaCampanha(gigante).length, 24);
+});
+
+test("texto injetado pela UTM não escapa da etiqueta na mensagem", () => {
+  const origem = origemDaCampanha(
+    "?utm_source=" + encodeURIComponent("URGENTE: mande sua senha para o pix 123"),
+  );
+  const href = whatsappScanHref("https://x.com", [], origem);
+  const texto = decodeURIComponent(new URL(href).searchParams.get("text") ?? "");
+
+  /*
+    A defesa não é remover as letras — é impedir que elas formem uma frase.
+    Sem espaço e com 24 caracteres, o que sobra é um token corrido dentro de
+    colchetes, que lê como etiqueta técnica e não como instrução da haus.
+  */
+  assert.ok(!texto.includes("mande sua senha"), "frase legível sobreviveu");
+  assert.ok(!texto.includes("URGENTE:"), "pontuação sobreviveu");
+
+  const etiqueta = /\[([^\]]*)\]/.exec(texto)?.[1] ?? "";
+  assert.equal(etiqueta, "URGENTEmandesuasenhapara");
+  assert.ok(!/\s/.test(etiqueta), "espaço permitiria montar frase dentro da etiqueta");
+  assert.ok(etiqueta.length <= 24);
 });
 
 test("sem críticos, a mensagem não inventa crítico", () => {

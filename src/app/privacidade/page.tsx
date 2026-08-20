@@ -9,9 +9,14 @@ import { site } from "@/content/site";
   Escrita a partir do código, não de modelo pronto. Cada afirmação aqui é
   verificável nos arquivos citados — se alguém mexer neles, esta página mente:
 
-    src/app/api/lead/route.ts   grava nome/contato/link/descrição no Supabase
     src/app/api/scan/route.ts   NÃO persiste nada; só timestamps de IP em memória
     src/app/layout.tsx          Vercel Analytics, sem cookie
+    src/components/sections/Orcamento.tsx   NÃO tem formulário
+
+  ⚠️ A primeira versão desta página descrevia coleta de nome/contato/descrição
+  via Supabase, escrita a partir de api/lead/route.ts. Estava errada: o
+  formulário foi removido da home e a rota responde 503 — nada no site a chama.
+  Se o formulário voltar, este bloco volta junto.
 
   ⚠️ Mexeu no que essas rotas guardam? Volte aqui. Política desatualizada é pior
   que política ausente — ela vira prova documentada do descumprimento.
@@ -63,11 +68,12 @@ export default function Privacidade() {
         </p>
 
         <p className="mt-7 text-[14.5px] leading-relaxed opacity-80">
-          Em resumo: guardamos o que você{" "}
-          <strong className="text-paper">nos manda de propósito</strong> pelo
-          formulário de orçamento, e mais nada. A verificação grátis não salva o
-          endereço que você cola. Não vendemos dado, não usamos cookie de
-          rastreamento e não há anúncio de terceiro neste site.
+          Em resumo:{" "}
+          <strong className="text-paper">este site não guarda nada sobre você</strong>.
+          Não tem cadastro, não tem formulário e não tem banco de dados de
+          visitante. A verificação grátis não salva o endereço que você cola. Não
+          vendemos dado, não usamos cookie de rastreamento e não há anúncio de
+          terceiro aqui.
         </p>
 
         <Bloco titulo="Quem somos">
@@ -86,21 +92,18 @@ export default function Privacidade() {
           </p>
         </Bloco>
 
-        <Bloco titulo="Formulário de orçamento">
+        <Bloco titulo="O que este site guarda sobre você">
           <p>
-            Quando você preenche o formulário, guardamos o que você digitou:{" "}
-            <strong className="text-paper">
-              nome, contato, link do projeto e a descrição do que está acontecendo
-            </strong>
-            . Fica num banco Supabase, acessível só por nós dois.
+            <strong className="text-paper">Nada.</strong> Não há cadastro,
+            formulário ou login neste site, e não existe banco de dados com
+            visitante. A única coisa registrada é o seu endereço de IP durante a
+            verificação, do jeito descrito abaixo.
           </p>
           <p>
-            Finalidade: responder o seu pedido e orçar o trabalho. Base legal:
-            procedimentos preliminares a contrato, a seu pedido (LGPD, art. 7º, V).
-          </p>
-          <p>
-            Retenção: 24 meses a partir do último contato, ou até você pedir
-            exclusão — o que vier primeiro.
+            Quando você fala com a gente é pelo WhatsApp ou por e-mail, e aí o
+            que você escreve fica onde você escreveu — na conversa. Se virarmos
+            fornecedor, o que for necessário para o trabalho é tratado em
+            contrato à parte.
           </p>
         </Bloco>
 
@@ -162,7 +165,6 @@ export default function Privacidade() {
           </p>
           <ul className="mt-1 space-y-2 font-mono text-[12.5px]">
             <li>— Vercel: hospedagem e medição de acesso</li>
-            <li>— Supabase: banco onde ficam os pedidos de orçamento</li>
             <li>— Meta/WhatsApp: só se você clicar no botão</li>
           </ul>
         </Bloco>

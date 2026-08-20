@@ -111,11 +111,36 @@ test("não duplica o mesmo segredo achado em dois bundles", () => {
 
 /* ----------------------------- cabeçalhos ------------------------------ */
 
-test("cabeçalhos ausentes viram um achado agregado", () => {
+/*
+  Um achado POR cabeçalho desde 20/08/2026.
+
+  Antes os 5 viravam uma linha só, e o relatório terminava sempre em
+  "1 achado(s)" independente do que o site tivesse — o que escondia o tamanho
+  do problema e empilhava quatro explicações numa frase que ninguém lê inteira.
+*/
+test("cada cabeçalho ausente vira o seu próprio achado", () => {
   const found = checkHeaders(ctx({ headers: new Headers() }));
 
+  assert.equal(found.length, 5);
+  assert.ok(found.every((f) => f.rule === "06"));
+  assert.ok(found.every((f) => f.severity === "media"));
+
+  // Cada um explica o seu risco e traz a sua própria correção.
+  assert.ok(found.some((f) => /content-security-policy/.test(f.evidence)));
+  assert.ok(found.some((f) => /referrer-policy/.test(f.evidence)));
+  assert.equal(new Set(found.map((f) => f.fix)).size, 5, "correções não podem ser genéricas");
+});
+
+test("só o cabeçalho que falta é reportado", () => {
+  const headers = new Headers({
+    "strict-transport-security": "max-age=63072000",
+    "x-frame-options": "DENY",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer",
+  });
+
+  const found = checkHeaders(ctx({ headers }));
   assert.equal(found.length, 1);
-  assert.equal(found[0].rule, "06");
   assert.match(found[0].evidence, /content-security-policy/);
 });
 
