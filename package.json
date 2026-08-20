@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "scan": "node --no-warnings scripts/scan.mjs",
-    "test": "node --no-warnings --test \"tests/*.test.ts\""
+    "test": "node --no-warnings --test \"tests/*.test.ts\"",
+    "fotos": "node --no-warnings scripts/fotos.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

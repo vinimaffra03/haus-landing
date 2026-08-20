@@ -95,9 +95,25 @@ export const steps = [
   camada gratuita e R$99/mês. Ele virou isca. O que se cobra é julgamento
   humano — o que corrigir primeiro e o que o scanner não enxerga.
 */
+/*
+  ⚠️ Diagnóstico a R$9,98 desde 20/08/2026, por decisão dos sócios. Não é preço,
+  é isca paga: a barreira que se quer derrubar é psicológica (de graça → cliente),
+  não financeira. Três consequências que vieram junto e precisam ser gerenciadas:
+
+  - A garantia "não achou, não paga" para de reverter risco. Ninguém pesa risco
+    de R$9,98. Ela continua no ar porque comunica confiança, não porque converte.
+  - Abre um degrau de 35x até a correção de R$350. É nesse vão que a venda morre,
+    e é o que o diagnóstico precisa costurar sozinho.
+  - Qualquer minuto humano aqui dá prejuízo. O diagnóstico TEM que ser quase
+    todo automático — se voltar a custar 30 min de trabalho, o preço é uma
+    doação, não uma estratégia.
+
+  Alternativa registrada caso o degrau se mostre fatal: R$49 com a mesma
+  garantia. Continua compra por impulso e mantém a escada navegável.
+*/
 export const prices = [
   { service: "Scan de superfície", term: "30 segundos", price: "grátis", lead: true },
-  { service: "Diagnóstico com prioridade", term: "24h", price: "R$150" },
+  { service: "Diagnóstico com prioridade", term: "24h", price: "R$9,98" },
   { service: "Correção pontual", term: "2 dias", price: "R$350" },
   { service: "Landing page", term: "4 dias", price: "R$650" },
   { service: "Colocar no ar — produção", term: "1 semana", price: "R$1.200", from: true },
@@ -106,6 +122,27 @@ export const prices = [
   { service: "Monitoramento mensal", term: "contínuo", price: "R$200", suffix: "/mês" },
 ] as const;
 
+/*
+  Os 4 checks da porta 1, na ordem em que src/lib/scan/index.ts os executa.
+
+  Servem em dois lugares: a lista estática do "o que a verificação cobre" na
+  /scan, e o indicador de progresso durante a espera. Manter numa fonte só evita
+  que o progresso mostre um check que o scanner não faz mais.
+*/
+export const scanChecks = [
+  "Chaves de acesso no código do navegador",
+  "Tabelas do banco abertas ao público",
+  "Proteções de navegador ausentes",
+  "Bibliotecas com falha conhecida",
+] as const;
+
+/*
+  `photo` sai de `node scripts/fotos.mjs`, a partir dos originais em fotos/.
+  Enquanto estiver vazia, a seção cai nas iniciais e nada quebra.
+
+  ⚠️ Teto de 96px de exibição. O original do De Lazzari tem ~299px de largura;
+  a 96px com tela 2x dá 192px e fica nítido. Acima disso borra.
+*/
 export const people = [
   {
     initials: "VM",
@@ -113,6 +150,7 @@ export const people = [
     role: "BACKEND · BANCO · SEGURANÇA",
     stack: "NODE / POSTGRES / SUPABASE",
     accent: true,
+    photo: "",
   },
   {
     initials: "JD",
@@ -120,8 +158,21 @@ export const people = [
     role: "FRONTEND · INTEGRAÇÃO",
     stack: "REACT / NEXT / DEPLOY",
     accent: false,
+    photo: "",
   },
 ] as const;
+
+/*
+  Garantia — fechada pelos sócios em 20/08/2026.
+
+  Sem valor escrito aqui de propósito: a /scan foi mantida sem nenhum "R$" por
+  decisão deles, e este texto é usado nas duas páginas.
+*/
+export const garantia = {
+  titulo: "Se a gente não achar nada, você não paga",
+  corpo:
+    "O diagnóstico completo custa menos que um café. E se mesmo assim não encontrarmos nada que valha a pena corrigir, você não paga — a gente te diz isso na cara e devolve.",
+} as const;
 
 /*
   Seis projetos reais, todos no ar e verificados (HTTP 200 em 14/08/2026).
@@ -220,7 +271,7 @@ export const faq = [
   },
   {
     q: "E se o scan não achar nada?",
-    a: "Ótimo, e você não paga nada. Mas fique atento: o scan enxerga só o lado de fora. Cinco dos nove problemas que procuramos só aparecem com acesso ao código — é isso que o diagnóstico de R$150 cobre.",
+    a: "Ótimo, e você não paga nada. Mas fique atento: o scan enxerga só o lado de fora. Cinco dos nove problemas que procuramos só aparecem com acesso ao código — é isso que o diagnóstico completo cobre.",
   },
   {
     q: "Vocês precisam de acesso ao meu banco de dados?",
@@ -240,6 +291,54 @@ export const faq = [
   },
 ] as const;
 
-export function whatsappHref() {
-  return `https://wa.me/${site.whatsapp.number}?text=${encodeURIComponent(site.whatsapp.message)}`;
+export function whatsappHref(mensagem: string = site.whatsapp.message) {
+  return `https://wa.me/${site.whatsapp.number}?text=${encodeURIComponent(mensagem)}`;
+}
+
+/** Quantos achados são listados na mensagem antes de virar "e mais N". */
+const MAX_NA_MENSAGEM = 6;
+
+/*
+  Monta a mensagem do WhatsApp já com o resultado do scan dentro.
+
+  Por que isto existe: até 20/08/2026 o botão pós-scan mandava o texto genérico.
+  A pessoa via o resultado, clicava, e chegava no WhatsApp com uma tela em branco
+  e a obrigação de explicar tudo de novo. O funil vazava inteiro no passo mais
+  caro — o clique já tinha sido pago.
+
+  🚨 INVARIANTE: só `title` entra aqui. NUNCA `evidence`.
+
+  `evidence` é o campo que carrega chave truncada e nome de tabela, e a
+  disciplina de src/lib/scan/checks/supabase.ts é justamente que ele jamais
+  contenha conteúdo de linha. Uma query string vai parar em log de servidor,
+  histórico de navegador e prévia de link — é o pior lugar possível para
+  qualquer coisa que se pareça com credencial. Título é rótulo de regra, texto
+  fixo escrito por nós, e não carrega nada do cliente.
+*/
+export function whatsappScanHref(
+  url: string,
+  achados: readonly { title: string; severity: string }[],
+) {
+  if (achados.length === 0) {
+    return whatsappHref(
+      `Oi! Rodei a verificação em ${url} e não apareceu nada por fora. ` +
+        `Queria entender o que só dá pra ver com acesso ao código.`,
+    );
+  }
+
+  const criticos = achados.filter((a) => a.severity === "critica").length;
+  const lista = achados
+    .slice(0, MAX_NA_MENSAGEM)
+    .map((a) => `- ${a.title}`)
+    .join("\n");
+  const resto =
+    achados.length > MAX_NA_MENSAGEM
+      ? `\n- e mais ${achados.length - MAX_NA_MENSAGEM}`
+      : "";
+
+  return whatsappHref(
+    `Oi! Rodei a verificação em ${url} e deu ${achados.length} ponto(s)` +
+      (criticos > 0 ? `, sendo ${criticos} crítico(s)` : "") +
+      `:\n\n${lista}${resto}\n\nQueria saber o que corrigir primeiro.`,
+  );
 }

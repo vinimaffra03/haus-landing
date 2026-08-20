@@ -47,9 +47,14 @@ export default function Orcamento() {
           </a>
         </div>
 
-        <p className="mt-14 font-mono text-[10px] tracking-[0.18em] uppercase opacity-55">
-          {site.brand} · {site.tagline} · {site.city} · {site.email}
-        </p>
+        <div className="mt-14 flex flex-wrap items-baseline gap-x-4 gap-y-2 font-mono text-[10px] tracking-[0.18em] uppercase opacity-55">
+          <span>
+            {site.brand} · {site.tagline} · {site.city} · {site.email}
+          </span>
+          <a href="/privacidade" className="underline underline-offset-4">
+            privacidade
+          </a>
+        </div>
       </div>
     </section>
   );

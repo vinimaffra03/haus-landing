@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { track } from "@vercel/analytics";
 import type { ScanResult } from "@/lib/scan/types.ts";
-import { whatsappHref } from "@/content/site";
+import { garantia, scanChecks, whatsappScanHref } from "@/content/site";
 
 type Estado = "parado" | "rodando" | "pronto" | "erro";
 
@@ -14,16 +14,32 @@ const COR = {
   media: "text-line-2",
 } as const;
 
+/** Segundos por check no indicador de progresso. */
+const RITMO = 3;
+
 export default function ScanForm() {
   const [estado, setEstado] = useState<Estado>("parado");
   const [resultado, setResultado] = useState<ScanResult | null>(null);
   const [erro, setErro] = useState("");
+  const [segundos, setSegundos] = useState(0);
+
+  /*
+    O H1 promete 30s e a rota tem maxDuration de 60. Sem isto, o visitante
+    encara um botão desabilitado por até um minuto sem sinal de vida — e a
+    aba fecha antes do resultado, que é o único momento em que a página vende.
+  */
+  useEffect(() => {
+    if (estado !== "rodando") return;
+    const id = setInterval(() => setSegundos((s) => s + 1), 1000);
+    return () => clearInterval(id);
+  }, [estado]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const url = new FormData(e.currentTarget).get("url")?.toString().trim() ?? "";
     if (!url) return;
 
+    setSegundos(0);
     setEstado("rodando");
     setErro("");
     track("scan_iniciado");
@@ -53,6 +69,15 @@ export default function ScanForm() {
 
   const criticos = resultado?.findings.filter((f) => f.severity === "critica").length ?? 0;
 
+  /*
+    Derivado, não estado — o passo é função do tempo decorrido.
+
+    O marcador só destaca o que está sendo olhado AGORA; nada recebe "concluído".
+    O ritmo é estimado, não medido, e afirmar conclusão que não foi verificada
+    seria mentira barata numa página que vende honestidade técnica.
+  */
+  const passoAtivo = Math.min(Math.floor(segundos / RITMO), scanChecks.length - 1);
+
   return (
     <div>
       <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row">
@@ -71,9 +96,32 @@ export default function ScanForm() {
           disabled={estado === "rodando"}
           className="bg-accent text-ink font-display px-8 py-4 text-[15px] tracking-[0.14em] uppercase transition-opacity hover:opacity-85 disabled:opacity-40"
         >
-          {estado === "rodando" ? "Verificando…" : "Verificar grátis"}
+          {estado === "rodando" ? `Verificando… ${segundos}s` : "Verificar grátis"}
         </button>
       </form>
+
+      {estado === "rodando" && (
+        <ul
+          aria-live="polite"
+          aria-label="Progresso da verificação"
+          className="border-line-2 mt-6 border font-mono text-[12.5px]"
+        >
+          {scanChecks.map((c, i) => {
+            const ativo = i === passoAtivo;
+            return (
+              <li
+                key={c}
+                className={`border-line flex items-baseline gap-3 px-4 py-2.5 ${
+                  i > 0 ? "border-t" : ""
+                } ${ativo ? "text-accent" : i < passoAtivo ? "opacity-55" : "opacity-25"}`}
+              >
+                <span aria-hidden="true">{ativo ? "›" : "·"}</span>
+                <span>{c}</span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       {estado === "erro" && (
         <p role="alert" className="border-line-2 mt-4 border px-4 py-3 font-mono text-xs">
@@ -130,18 +178,29 @@ export default function ScanForm() {
           <div className="bg-accent text-ink px-5 py-6">
             <p className="font-display text-xl uppercase">Quer que a gente resolva?</p>
             <p className="mt-2 max-w-[46ch] text-[13px] leading-relaxed opacity-80">
-              Manda o resultado no WhatsApp que a gente te diz o que corrigir
-              primeiro e quanto custa. Resposta no mesmo dia.
+              O botão abaixo já abre o WhatsApp com esse resultado escrito — você não
+              precisa explicar nada. A gente responde no mesmo dia dizendo o que
+              corrigir primeiro e quanto custa.
             </p>
+
+            {/*
+              O resultado vai DENTRO da mensagem. Antes disto o botão mandava o
+              texto genérico e o achado morria na aba fechada.
+              🚨 Só `title` e `severity` — nunca `evidence`. Ver whatsappScanHref.
+            */}
             <a
-              href={whatsappHref()}
+              href={whatsappScanHref(resultado.url, resultado.findings)}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => track("whatsapp_pos_scan")}
+              onClick={() => track("whatsapp_pos_scan", { achados: resultado.findings.length })}
               className="bg-ink text-accent font-display mt-5 inline-block px-7 py-3.5 text-[15px] tracking-[0.14em] uppercase"
             >
               Falar no WhatsApp
             </a>
+
+            <p className="mt-5 border-t border-black/20 pt-4 text-[12px] leading-relaxed opacity-70">
+              <strong>{garantia.titulo}.</strong> {garantia.corpo}
+            </p>
           </div>
         </div>
       )}

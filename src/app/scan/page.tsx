@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
+import Avatar from "@/components/Avatar";
 import ScanForm from "@/components/ScanForm";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
-import { site } from "@/content/site";
+import { people, scanChecks, site } from "@/content/site";
 
 /*
   Landing dedicada ao tráfego pago.
 
   Diferenças propositais em relação à home:
   - Uma oferta só (o scan), não sete preços. Escolha reduz conversão.
-  - Sem menu e sem links de saída além da CTA.
+  - Sem menu e sem links de saída além da CTA. A única exceção é a política de
+    privacidade no rodapé, que o Google Ads exige alcançável no destino.
+  - Sem nenhum "R$" na página, por decisão dos sócios em 20/08/2026.
   - H1 espelha o texto do anúncio — correspondência anúncio↔página é o
     principal preditor de conversão em mídia paga, e o Google usa a
     experiência da landing no Índice de Qualidade (CPC mais barato).
@@ -17,6 +20,10 @@ import { site } from "@/content/site";
   desonesto" proíbe serviço que dê acesso não autorizado a sistemas. Evitar
   aqui e no anúncio: hacker, invadir, vulnerabilidade, exploit, brecha,
   senha exposta. Usar: revisão técnica, verificação, correção.
+
+  A garantia mora no bloco de CTA (ScanForm), não aqui: ela cobre o diagnóstico
+  PAGO, que só é oferecido depois do resultado. Antes disso a oferta é grátis e
+  não há risco a reverter.
 */
 
 export const metadata: Metadata = {
@@ -51,10 +58,11 @@ export default function ScanPage() {
             o que a verificação cobre
           </p>
           <ul className="mt-4 grid gap-2 font-mono text-[12.5px] sm:grid-cols-2">
-            <li className="opacity-75">Chaves de acesso no código do navegador</li>
-            <li className="opacity-75">Tabelas do banco abertas ao público</li>
-            <li className="opacity-75">Proteções de navegador ausentes</li>
-            <li className="opacity-75">Bibliotecas com falha conhecida</li>
+            {scanChecks.map((c) => (
+              <li key={c} className="opacity-75">
+                {c}
+              </li>
+            ))}
           </ul>
           <p className="mt-6 max-w-[58ch] text-[12.5px] leading-relaxed opacity-50">
             A verificação é passiva: nós só olhamos o que seu site já entrega a
@@ -64,9 +72,43 @@ export default function ScanPage() {
           </p>
         </div>
 
-        <p className="mt-14 font-mono text-[10px] tracking-[0.18em] uppercase opacity-40">
-          {site.brand} · {site.city} · {site.email}
-        </p>
+        {/*
+          Assinatura humana. Até 20/08/2026 esta página pedia a um estranho que
+          colasse o endereço do app dele sem mostrar uma única pessoa por trás.
+        */}
+        <div className="border-line mt-12 border-t pt-8">
+          <p className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-45">
+            quem vai olhar
+          </p>
+          <div className="mt-5 flex flex-wrap gap-x-10 gap-y-5">
+            {people.map((p) => (
+              <div key={p.name} className="flex items-center gap-3.5">
+                <Avatar person={p} size={48} />
+                <div>
+                  <p className="font-display text-[15px] tracking-[0.04em] uppercase">
+                    {p.name}
+                  </p>
+                  <p className="mt-0.5 font-mono text-[10px] tracking-[0.1em] opacity-45">
+                    {p.role}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-5 max-w-[52ch] text-[12.5px] leading-relaxed opacity-50">
+            Somos dois, em {site.city}. Você fala direto com quem escreve o código —
+            não com atendimento.
+          </p>
+        </div>
+
+        <div className="border-line mt-14 flex flex-wrap items-baseline gap-x-4 gap-y-2 border-t pt-8 font-mono text-[10px] tracking-[0.18em] uppercase opacity-40">
+          <span>
+            {site.brand} · {site.city} · {site.email}
+          </span>
+          <a href="/privacidade" className="underline underline-offset-4">
+            privacidade
+          </a>
+        </div>
       </div>
 
       <WhatsAppFloat />

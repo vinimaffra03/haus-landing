@@ -44,3 +44,6 @@ next-env.d.ts
 !.env.example
 
 .vercel
+
+# fotos originais dos socios — o que vai pro repo e a saida em public/equipe/
+/fotos

@@ -1,3 +1,4 @@
+import Avatar from "@/components/Avatar";
 import { Eyebrow, Section } from "@/components/ui";
 import { people } from "@/content/site";
 
@@ -9,15 +10,8 @@ export default function QuemFaz() {
       <div className="mt-10 grid gap-10 sm:grid-cols-2">
         {people.map((p) => (
           <div key={p.name}>
-            {/* Substituir por foto real assim que tiverem — rosto converte mais que inicial. */}
-            <div
-              className={`flex size-14 items-center justify-center font-mono text-[15px] ${
-                p.accent ? "bg-accent text-ink" : "bg-slate text-paper"
-              }`}
-            >
-              {p.initials}
-            </div>
-            <h3 className="mt-4 font-display text-xl tracking-[0.04em] uppercase">
+            <Avatar person={p} size={96} />
+            <h3 className="font-display mt-4 text-xl tracking-[0.04em] uppercase">
               {p.name}
             </h3>
             <p className="mt-1.5 font-mono text-[11px] leading-relaxed opacity-50">
