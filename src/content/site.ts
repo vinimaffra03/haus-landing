@@ -115,8 +115,8 @@ export const people = [
     accent: true,
   },
   {
-    initials: "—",
-    name: "[SÓCIO]",
+    initials: "JD",
+    name: "JOÃO DE LAZZARI",
     role: "FRONTEND · INTEGRAÇÃO",
     stack: "REACT / NEXT / DEPLOY",
     accent: false,
