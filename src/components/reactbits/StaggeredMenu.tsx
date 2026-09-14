@@ -14,6 +14,13 @@ import styles from "./StaggeredMenu.module.css";
   - Fecha com Escape e trava o scroll do body enquanto aberto. O original não
     faz nenhum dos dois, e sem isso a página rola atrás do painel aberto.
   - Sem logo por imagem: a haus. usa wordmark tipográfico.
+  - Backdrop escurecendo o resto da página, e clicar nele fecha. O original
+    deixa o conteúdo visível ao lado do painel em tela larga.
+
+  🐛 14/09/2026: o toggle ficava DEBAIXO do painel aberto (estático vs. fixed
+  com z-index no mesmo contexto). No celular o painel é a tela inteira, então
+  o "Fechar" sumia e, sem teclado para o Escape, não havia como fechar. Ver
+  .toggle no CSS.
 
   ⚠️ Só vai na home. A /scan é landing de tráfego pago e precisa de zero saídas
   além da CTA — menu ali derruba justamente a conversão que está sendo paga.
@@ -198,7 +205,7 @@ export default function StaggeredMenu({ items, links = [], linksTitle = "Contato
   }, [aberto, alternar]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-aberto={aberto}>
       <button
         type="button"
         className={styles.toggle}
@@ -221,6 +228,15 @@ export default function StaggeredMenu({ items, links = [], linksTitle = "Contato
           <span ref={barraVRef} className={styles.iconLine} />
         </span>
       </button>
+
+      {/* Clicar fora fecha. Só recebe clique com o menu aberto (pointer-events no CSS). */}
+      <div
+        className={styles.backdrop}
+        aria-hidden="true"
+        onClick={() => {
+          if (abertoRef.current) alternar();
+        }}
+      />
 
       <div ref={camadasRef} className={styles.prelayers} aria-hidden="true">
         <div data-camada className={styles.prelayer} style={{ background: "#D33D00" }} />
