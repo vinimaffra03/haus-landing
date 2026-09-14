@@ -150,7 +150,7 @@ export const people = [
     role: "BACKEND · BANCO · SEGURANÇA",
     stack: "NODE / POSTGRES / SUPABASE",
     accent: true,
-    photo: "",
+    photo: "/equipe/vinicius.webp",
   },
   {
     initials: "JD",
@@ -158,7 +158,7 @@ export const people = [
     role: "FRONTEND · INTEGRAÇÃO",
     stack: "REACT / NEXT / DEPLOY",
     accent: false,
-    photo: "",
+    photo: "/equipe/delazzari.webp",
   },
 ] as const;
 

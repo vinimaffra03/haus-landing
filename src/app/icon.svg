@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#000000"/>
+  <!-- h geométrico, raio zero, em papel -->
+  <rect x="150" y="120" width="78" height="272" fill="#F5F5F5"/>
+  <rect x="150" y="236" width="228" height="64" fill="#F5F5F5"/>
+  <rect x="300" y="236" width="78" height="156" fill="#F5F5F5"/>
+  <!-- ponto = marca de cota, quadrado, no acento -->
+  <rect x="398" y="330" width="62" height="62" fill="#D33D00"/>
+</svg>
